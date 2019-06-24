@@ -18,4 +18,14 @@ with open('WH.csv') as csv_file:
         WHs.append(row[0])
         WH_cap.append(row[1])
         WH_cost.append(row[2])
-print(WH_cost)
+
+# customers
+custs = []
+cust_demand = []
+with open('cust.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    for row in csv_reader:
+        custs.append(row[0])
+        cust_demand.append(row[1])
+print(custs)
+print(cust_demand)
