@@ -1,9 +1,9 @@
 from gurobipy import *
 import csv
 
+
 def info():
     # porting in the static data
-
 
     # plants
     plants = ['Cambridge', 'Barrie']
@@ -42,7 +42,7 @@ def info():
             dist = line[2]
             plant_WH_distance[(WH, plant)] = dist
 
-    print(plant_WH_distance[('Ottawa', 'Barrie')])
+    # print(plant_WH_distance[('Ottawa', 'Barrie')])
 
     WH_cust_distance = {}
     with open('WH_cust_distance.csv') as csv_file:
@@ -53,17 +53,43 @@ def info():
             dist = line[2]
             WH_cust_distance[(cust, WH)] = dist
 
-    print(WH_cust_distance[('Greater Sudbury', 'London')])
+    # print(WH_cust_distance[('Greater Sudbury', 'London')])
+    return plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance
 
-def optimize():
+
+def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance):
     m = Model()
 
     # creating variables
-    # x = m.addVars(n,n, vtype=GRB.BINARY)
+    P = len(plants)
+    W = len(WHs)
+    C = len(custs)
+    tij = m.addVars(P, W, vtype=GRB.INTEGER)  # number of goods from plant i to WH j
+    Wj = m.addVars(W, vtype=GRB.BINARY)  # 1 if warehouse j operates
+    Cjk = m.addVars(W, C, vtype=GRB.INTEGER)  # number of goods from WH j to cust k
+
+    # constants
+    dij = plant_WH_distance
+    djk = WH_cust_distance
+    Cj = WH_cost
+    Ci = plant_cost
+    Wpj = WH_cap
+
+    # objective function
+    m.setObjective(quicksum(quicksum(tij[i, j] * dij[i, j] for i in range(P)) for j in range(W)) * COST_KM +
+                   quicksum(Wj[j] * Cj[j] for j in range(W)) +
+                   quicksum(quicsum(Cjk * djk for j in range(W)) for k in range(C)) +
+                   quicksum(Ci for i in range(P)), GRB.MINIMIZE)
+
+    # constraints
+    for j in range(W):
+        m.addConstr(quicksum(tij for i in range(P)) <= Wpj[j])
+        m.addContr()
 
 
 if __name__ == "__main__":
     # cost per kilometer
     COST_KM = 187
 
-    info()
+    plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance = info()
+    optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance)
