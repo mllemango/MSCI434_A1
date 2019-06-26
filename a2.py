@@ -55,7 +55,8 @@ def info():
             dist = line[2]
             WH_cust_distance[(cust, WH)] = dist
 
-    print(WH_cust_distance[('Greater Sudbury', 'London')])
+    # print(WH_cust_distance[('Greater Sudbury', 'London')])
+
     return plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance
 
 
@@ -79,10 +80,10 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
     Cdk = cust_demand
     Pci = plant_cap  # [1500, 1500]
 
-    # print(dij)
-
     # objective function
-    m.setObjective(quicksum(quicksum(tij[i, j] * dij[i, j] for i in range(P)) for j in range(W)) * COST_KM +
+    print((i for i in plant))
+    '''
+    m.setObjective(quicksum(quicksum(tij[(i, j)] * dij[(i, j)] for i in plants) for j in WHs) * COST_KM +
                    quicksum(Wj[j] * Cj[j] for j in range(W)) +
                    quicksum(quicksum(Cjk[j, k] * djk[j, k] for j in range(W)) for k in range(C)) +
                    quicksum(Ci[i] for i in range(P)), GRB.MINIMIZE)  # last summation is a constant
@@ -103,10 +104,12 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
         m.addConstr(Wj[j] * Wpj[j] - quicksum(tij[i, j] for i in range(P)) >= 0)  # if WH j is not operating, nothing goes out of it
 
     m.update()
-    m.optimize()
+    #m.optimize()
 
     # printing output
-    print('Min Cost', m.objVal)
+    #print('Min Cost', m.objVal)
+
+    '''
 
 
 if __name__ == "__main__":
