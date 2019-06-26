@@ -5,6 +5,8 @@ import csv
 def info():
     # porting in the static data
 
+    COST_KM = 1870000
+
     # plants
     plants = ['Cambridge', 'Barrie']
     plant_cap = {'Cambridge': 1500, 'Barrie': 1500}
@@ -43,7 +45,7 @@ def info():
         for line in csv_reader:
             WH = line[0]
             plant = line[1]
-            dist = line[2]
+            dist = float(line[2])*COST_KM
             plant_WH_distance[(WH, plant)] = dist
 
     # print(plant_WH_distance[('Ottawa', 'Barrie')])
@@ -57,7 +59,7 @@ def info():
             if (line[2] == ''):
                 dist = 0
             else:
-                dist = line[2]
+                dist = float(line[2])*COST_KM
             WH_cust_distance[(cust, WH)] = dist
 
     # print(WH_cust_distance[('Greater Sudbury', 'London')])
@@ -84,11 +86,12 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
     Wpj = WH_cap
     Cdk = cust_demand
     Pci = plant_cap  # [1500, 1500]
+    COST_KM = 1
 
     # objective function
-    m.setObjective(tij.prod(dij) * COST_KM +
+    m.setObjective(tij.prod(dij) +
                    quicksum(Wj[j] * Cj[j] for j in WHs) +
-                   Cjk.prod(djk) * COST_KM +
+                   Cjk.prod(djk) +
                    quicksum(Ci[i] for i in plants), GRB.MINIMIZE)  # last summation is a constant
 
     # constraints
@@ -112,6 +115,8 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
 
     # printing output
     print('Min Cost', m.objVal)
+    solution = m.getAttr('x', Wj)
+    print(solution)
 
 
 if __name__ == "__main__":
