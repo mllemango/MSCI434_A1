@@ -5,12 +5,12 @@ import csv
 def info():
     # porting in the static data
 
-    COST_KM = 1870000
+    COST_KM = 187
 
     # plants
-    plants = ['Cambridge', 'Barrie']
-    plant_cap = {'Cambridge': 1500, 'Barrie': 1500}
-    plant_cost = {'Cambridge': 288.00, 'Barrie': 476.00}
+    plants = ['cambridge', 'barrie']
+    plant_cap = {'cambridge': 1500, 'barrie': 1500}
+    plant_cost = {'cambridge': 288.00, 'barrie': 476.00}
 
     # warehouses
     WHs = []
@@ -19,7 +19,7 @@ def info():
     with open('WH.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
-            WH = row[0]
+            WH = row[0].lower()
             WHs.append(WH)
             WH_cap[WH] = row[1]
             WH_Cost[WH] = row[2]
@@ -32,7 +32,7 @@ def info():
     with open('cust.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
-            cust = row[0]
+            cust = row[0].lower()
             custs.append(cust)
             cust_demand[cust] = row[1]
     # print(custs)
@@ -43,10 +43,10 @@ def info():
     with open('plant_WH_distance.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for line in csv_reader:
-            WH = line[0]
-            plant = line[1]
-            dist = float(line[2])*COST_KM
-            plant_WH_distance[(WH, plant)] = dist
+            WH = line[0].lower()
+            plant = line[1].lower()
+            dist = float(line[2]) * COST_KM
+            plant_WH_distance[(plant, WH)] = dist
 
     # print(plant_WH_distance[('Ottawa', 'Barrie')])
 
@@ -54,17 +54,18 @@ def info():
     with open('WH_cust_distance.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for line in csv_reader:
-            cust = line[0]
-            WH = line[1]
+            cust = line[0].lower()
+            WH = line[1].lower()
             if (line[2] == ''):
                 dist = 0
             else:
-                dist = float(line[2])*COST_KM
-            WH_cust_distance[(cust, WH)] = dist
+                dist = float(line[2]) * COST_KM
+            WH_cust_distance[(WH, cust)] = dist
 
     # print(WH_cust_distance[('Greater Sudbury', 'London')])
 
     return plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance
+
 
 
 def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance):
@@ -86,12 +87,15 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
     Wpj = WH_cap
     Cdk = cust_demand
     Pci = plant_cap  # [1500, 1500]
-    COST_KM = 1
 
+    print(djk)
     # objective function
-    m.setObjective(tij.prod(dij) +
+
+    m.setObjective(quicksum(quicksum(tij[i, j] * dij[(i, j)] for i in plants) for j in WHs) +
+                   # tij.prod(dij) +
                    quicksum(Wj[j] * Cj[j] for j in WHs) +
-                   Cjk.prod(djk) +
+                   # Cjk.prod(djk) +
+                   quicksum(quicksum(Cjk[j, k] * djk[j, k] for j in WHs) for k in custs) +
                    quicksum(Ci[i] for i in plants), GRB.MINIMIZE)  # last summation is a constant
 
     # constraints
@@ -120,8 +124,6 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
 
 
 if __name__ == "__main__":
-    # cost per kilometer
-    COST_KM = 187
 
     plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance = info()
     optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance)
