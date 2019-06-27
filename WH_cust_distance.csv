@@ -1,27 +1,27 @@
-Barrie,Greater Sudbury,290.17
-Belleville,Greater Sudbury,525.52
-Brantford,Greater Sudbury,471.52
-Greater Sudbury,Greater Sudbury,
-Guelph,Greater Sudbury,443.04
-Hamilton,Greater Sudbury,436.52
-Kanata,Greater Sudbury,507.68
-Kingston,Greater Sudbury,586.74
-Kitchener,Greater Sudbury,459.15
-London,Greater Sudbury,542.46
-Milton,Greater Sudbury,404.89
-Oshawa,Greater Sudbury,378.46
-Ottawa,Greater Sudbury,482.65
-Peterborough,Greater Sudbury,412.59
-Sarnia,Greater Sudbury,642.06
-Sault Ste. Marie,Greater Sudbury,306.3
-St. Catharines,Greater Sudbury,478.03
-Thunder Bay,Greater Sudbury,1003.13
-Toronto,Greater Sudbury,380.18
-Windsor,Greater Sudbury,720.31
+Barrie,Sudbury,290.17
+Belleville,Sudbury,525.52
+Brantford,Sudbury,471.52
+Sudbury,Sudbury,
+Guelph,Sudbury,443.04
+Hamilton,Sudbury,436.52
+Kanata,Sudbury,507.68
+Kingston,Sudbury,586.74
+Kitchener,Sudbury,459.15
+London,Sudbury,542.46
+Milton,Sudbury,404.89
+Oshawa,Sudbury,378.46
+Ottawa,Sudbury,482.65
+Peterborough,Sudbury,412.59
+Sarnia,Sudbury,642.06
+Sault Ste. Marie,Sudbury,306.3
+St. Catharines,Sudbury,478.03
+Thunder Bay,Sudbury,1003.13
+Toronto,Sudbury,380.18
+Windsor,Sudbury,720.31
 Barrie,Kingston,343.52
 Belleville,Kingston,82.95
 Brantford,Kingston,365.5
-Greater Sudbury,Kingston,585.85
+Sudbury,Kingston,585.85
 Guelph,Kingston,340.65
 Hamilton,Kingston,330.5
 Kanata,Kingston,156.81
@@ -41,7 +41,7 @@ Windsor,Kingston,617.92
 Barrie,London,255.33
 Belleville,London,364.17
 Brantford,London,94.11
-Greater Sudbury,London,543.55
+Sudbury,London,543.55
 Guelph,London,119.22
 Hamilton,London,128.35
 Kanata,London,615.3
@@ -61,7 +61,7 @@ Windsor,London,190.38
 Barrie,Niagara Falls,208.74
 Belleville,Niagara Falls,313.96
 Brantford,Niagara Falls,114.77
-Greater Sudbury,Niagara Falls,496.96
+Sudbury,Niagara Falls,496.96
 Guelph,Niagara Falls,127.46
 Hamilton,Niagara Falls,71.55
 Kanata,Niagara Falls,420.97
@@ -81,7 +81,7 @@ Windsor,Niagara Falls,378.26
 Barrie,Ottawa,409.97
 Belleville,Ottawa,228.8
 Brantford,Ottawa,528.82
-Greater Sudbury,Ottawa,482.64
+Sudbury,Ottawa,482.64
 Guelph,Ottawa,503.97
 Hamilton,Ottawa,493.82
 Kanata,Ottawa,21.42
@@ -101,7 +101,7 @@ Windsor,Ottawa,781.24
 Barrie,Thunder Bay,1285.65
 Belleville,Thunder Bay,1733.52
 Brantford,Thunder Bay,1463.45
-Greater Sudbury,Thunder Bay,1003.94
+Sudbury,Thunder Bay,1003.94
 Guelph,Thunder Bay,1488.57
 Hamilton,Thunder Bay,1497.69
 Kanata,Thunder Bay,1313.34
@@ -121,7 +121,7 @@ Windsor,Thunder Bay,1362.92
 Barrie,Toronto,90.95
 Belleville,Toronto,183.72
 Brantford,Toronto,108.56
-Greater Sudbury,Toronto,379.17
+Sudbury,Toronto,379.17
 Guelph,Toronto,89.57
 Hamilton,Toronto,73.56
 Kanata,Toronto,411.8
@@ -141,7 +141,7 @@ Windsor,Toronto,366.84
 Barrie,Windsor,432.56
 Belleville,Windsor,541.41
 Brantford,Windsor,271.34
-Greater Sudbury,Windsor,720.79
+Sudbury,Windsor,720.79
 Guelph,Windsor,296.46
 Hamilton,Windsor,305.58
 Kanata,Windsor,814.17
