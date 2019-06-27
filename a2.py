@@ -5,12 +5,12 @@ import csv
 def info():
     # porting in the static data
 
-    COST_KM = 187
+    COST_KM = 0.187
 
     # plants
     plants = ['cambridge', 'barrie']
-    plant_cap = {'cambridge': 1500, 'barrie': 1500}
-    plant_cost = {'cambridge': 288.00, 'barrie': 476.00}
+    plant_cap = {'cambridge': 1500000, 'barrie': 1500000}
+    plant_cost = {'cambridge': 288000, 'barrie': 476000}
 
     # warehouses
     WHs = []
@@ -21,8 +21,8 @@ def info():
         for row in csv_reader:
             WH = row[0].lower()
             WHs.append(WH)
-            WH_cap[WH] = row[1]
-            WH_Cost[WH] = row[2]
+            WH_cap[WH] = float(row[1]) * 1000
+            WH_Cost[WH] = float(row[2]) * 1000
     # print(WHs)
     # print(WH_cap)
     # print(WH_Cost)
@@ -34,7 +34,7 @@ def info():
         for row in csv_reader:
             cust = row[0].lower()
             custs.append(cust)
-            cust_demand[cust] = row[1]
+            cust_demand[cust] = float(row[1]) * 1000
     # print(custs)
     # print(cust_demand)
 
@@ -63,9 +63,10 @@ def info():
             WH_cust_distance[(WH, cust)] = dist
 
     # print(WH_cust_distance[('Greater Sudbury', 'London')])
+    # print(WH_Cost)
+    # print(WH_cap)
 
     return plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance
-
 
 
 def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_demand, plant_WH_distance, WH_cust_distance):
@@ -86,33 +87,30 @@ def optimize(plants, WHs, custs, plant_cap, plant_cost, WH_cap, WH_Cost, cust_de
     Ci = plant_cost
     Wpj = WH_cap
     Cdk = cust_demand
-    Pci = plant_cap  # [1500, 1500]
+    Pci = plant_cap
 
-    print(djk)
     # objective function
-
+    PLANT_COST = 288000 + 476000  # constant
     m.setObjective(quicksum(quicksum(tij[i, j] * dij[(i, j)] for i in plants) for j in WHs) +
                    # tij.prod(dij) +
                    quicksum(Wj[j] * Cj[j] for j in WHs) +
                    # Cjk.prod(djk) +
                    quicksum(quicksum(Cjk[j, k] * djk[j, k] for j in WHs) for k in custs) +
-                   quicksum(Ci[i] for i in plants), GRB.MINIMIZE)  # last summation is a constant
+                   PLANT_COST,
+                   GRB.MINIMIZE)
 
     # constraints
-    # Plant constraints
     for i in plants:
         m.addConstr(quicksum(tij[i, j] for j in WHs) <= Pci[i])  # goods going out of plant i does not go over plant capacity
-    # WH constraints --> 1 constraint for each WH
+
     for j in WHs:
         # m.addConstr(quicksum(tij[i, j] for i in range(P)) <= Wpj[j])  # WH goods do not exceed capcity
         m.addConstr(quicksum(tij[i, j] for i in plants) == quicksum(Cjk[j, k] for k in custs))  # goods going into WH = goods going out of WH
-    # Customer demand
+        m.addConstr(Wj[j] * Wpj[j] - quicksum(tij[i, j] for i in plants) >= 0)  # if WH j is not operating, nothing goes out of it
+
     for k in custs:
         cust_k_demand = int(Cdk[k])
         m.addConstr(quicksum(Cjk.sum(j, k, '*') for j in WHs) == cust_k_demand)  # demand is met for Cust K
-    # Operations
-    for j in WHs:
-        m.addConstr(Wj[j] * Wpj[j] - quicksum(tij[i, j] for i in plants) >= 0)  # if WH j is not operating, nothing goes out of it
 
     m.update()
     m.optimize()
